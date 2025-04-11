@@ -1,0 +1,35 @@
+name: Fetch and Extract ZIP
+
+on:
+  workflow_dispatch: # Allows manual execution
+
+permissions:
+  contents: write  # Required to push changes to the repo
+  issues: write
+  pull-requests: write
+
+jobs:
+  fetch-and-extract:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Download ZIP File
+        run: curl -L -o archive.zip "https://github.com/anime-kun32/Aniflix/actions/runs/14397703205/artifacts/2925534476"
+
+      - name: Extract ZIP File to server/build/libs
+        run: unzip -o archive.zip -d server/build/libs
+
+      - name: Remove ZIP File
+        run: rm -f archive.zip
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Fetch and extract ZIP file"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
