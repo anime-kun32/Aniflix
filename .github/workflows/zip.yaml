@@ -1,48 +1,29 @@
-name: Fetch and Extract ZIP
+name: Download JAR File and Save to Build Path
 
 on:
-  workflow_dispatch: # Allows manual execution
-
-permissions:
-  contents: write  # Required to push changes to the repo
-  issues: write
-  pull-requests: write
+  push:
+    branches:
+      - main  # Change to the desired branch if needed
 
 jobs:
-  fetch-and-extract:
+  download_and_save_file:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Download ZIP File
-        run: |
-          curl -L -o archive.zip "https://github.com/anime-kun32/Aniflix/actions/runs/14397703205/artifacts/2925534476"
+    - name: Download JAR file
+      run: |
+        # Define the URL for the JAR file and the target path
+        FILE_URL="https://github.com/anime-kun32/Aniflix/releases/download/Jar/aniflix.jar"
+        TARGET_PATH="server/build/libs/aniflix.jar"
+        
+        # Download the JAR file
+        curl -L -o $TARGET_PATH $FILE_URL
 
-      - name: Inspect the downloaded file
-        run: |
-          file archive.zip
-          head -n 20 archive.zip
-
-      - name: Verify ZIP file
-        run: |
-          if ! unzip -t archive.zip; then
-            echo "Invalid ZIP file";
-            exit 1;
-          fi
-
-      - name: Extract ZIP File to server/build/libs
-        run: unzip -o archive.zip -d server/build/libs
-
-      - name: Remove ZIP File
-        run: rm -f archive.zip
-
-      - name: Commit and Push Changes
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add .
-          git commit -m "Fetch and extract ZIP file"
-          git push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Commit downloaded file
+      run: |
+        git add server/build/libs/aniflix.jar
+        git commit -m "Add downloaded aniflix.jar file"
+        git push
