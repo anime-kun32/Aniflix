@@ -18,6 +18,13 @@ jobs:
       - name: Download ZIP File
         run: curl -L -o archive.zip "https://github.com/anime-kun32/Aniflix/actions/runs/14397703205/artifacts/2925534476"
 
+      - name: Verify ZIP file
+        run: |
+          if ! unzip -t archive.zip; then
+            echo "Invalid ZIP file";
+            exit 1;
+          fi
+
       - name: Extract ZIP File to server/build/libs
         run: unzip -o archive.zip -d server/build/libs
 
