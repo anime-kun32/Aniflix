@@ -25,6 +25,7 @@ jobs:
 
     - name: Commit downloaded file
       run: |
-        git add server/build/libs/aniflix.jar
+        # Force add the file even though it might be in .gitignore
+        git add -f server/build/libs/aniflix.jar
         git commit -m "Add downloaded aniflix.jar file"
         git push
