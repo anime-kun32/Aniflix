@@ -20,9 +20,13 @@ jobs:
         # Download the JAR file
         curl -L -o $TARGET_PATH $FILE_URL
 
+    - name: Set Git identity
+      run: |
+        git config user.name "GitHub Actions Bot"
+        git config user.email "actions@github.com"
+
     - name: Commit downloaded file
       run: |
-        # Force add the file even though it might be in .gitignore
         git add -f server/build/libs/aniflix.jar
         git commit -m "Add downloaded aniflix.jar file"
         git push
