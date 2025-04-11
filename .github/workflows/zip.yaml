@@ -16,7 +16,13 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Download ZIP File
-        run: curl -L -o archive.zip "https://github.com/anime-kun32/Aniflix/actions/runs/14397703205/artifacts/2925534476"
+        run: |
+          curl -L -o archive.zip "https://github.com/anime-kun32/Aniflix/actions/runs/14397703205/artifacts/2925534476"
+
+      - name: Inspect the downloaded file
+        run: |
+          file archive.zip
+          head -n 20 archive.zip
 
       - name: Verify ZIP file
         run: |
