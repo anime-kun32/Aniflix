@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main  # Change to the desired branch if needed
+  workflow_dispatch:  # Allows manual triggering from GitHub UI
 
 jobs:
   download_and_save_file:
