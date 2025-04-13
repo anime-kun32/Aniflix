@@ -1,0 +1,28 @@
+name: View Render Logs
+
+on:
+  workflow_dispatch: # Manual trigger via GitHub UI
+
+jobs:
+  fetch-logs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install Render CLI
+        run: npm install -g render-cli
+
+      - name: Authenticate Render CLI
+        run: render login --api-key ${{ secrets.RENDER_API_KEY }}
+
+      - name: Fetch logs from Render service
+        run: |
+          echo "Fetching logs for service..."
+          render services logs ceab330 --limit 100
