@@ -1,0 +1,35 @@
+name: Build and Push Server Image to GHCR
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:  # This makes it possible to trigger manually
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Docker image from ./server
+        run: |
+          IMAGE_NAME=ghcr.io/anime-kun32/aniflix-server:latest
+          docker build -t $IMAGE_NAME ./server
+
+      - name: Push Docker image
+        run: |
+          IMAGE_NAME=ghcr.io/anime-kun32/aniflix-server:latest
+          docker push $IMAGE_NAME
