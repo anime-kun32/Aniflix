@@ -1,10 +1,14 @@
-name: Build Aniflix JAR
+name: Build and Deploy Pre-Built Image to Render
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
+  workflow_dispatch:  # This allows manual triggering
 
 jobs:
-  build:
+  build-and-deploy:
+    name: Build Docker Image and Deploy to Render
     runs-on: ubuntu-latest
 
     defaults:
@@ -18,17 +22,29 @@ jobs:
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
+          distribution: temurin
           java-version: 17
 
-      - name: Give Gradle wrapper permission
+      - name: Grant execute permission to Gradle
         run: chmod +x ./gradlew
 
-      - name: Build JAR with Gradle
-        run: ./gradlew build
+      - name: Build JAR
+        run: ./gradlew clean build
 
-      - name: Upload JAR artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: aniflix-jar
-          path: server/build/libs/*.jar
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image locally
+        run: |
+          docker build -f server/Dockerfile -t aniflix-server:latest ./server
+
+      - name: Save Docker image as tarball
+        run: |
+          docker save aniflix-server:latest -o aniflix-server.tar
+
+      - name: Upload Docker image tarball to Render
+        run: |
+          curl -X POST https://api.render.com/v1/services/srv-cvuef8hr0fns7381f7cg/deploys \
+            -H "Authorization: Bearer rnd_bQP2nphNZ83yaaXcI3yGHmTN8BrZ" \
+            -H "Content-Type: application/json" \
+            -d '{"clearCache":false,"dockerImageTarball":"@aniflix-server.tar"}'
