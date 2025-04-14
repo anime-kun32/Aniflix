@@ -1,0 +1,38 @@
+# railway.toml
+
+version = "1"
+
+[deploy]
+  dockerfile = "./server/Dockerfile"
+  services = [
+    { name = "server", type = "docker", port = 8080 }
+  ]
+
+# Define environment variables for the server
+[env]
+  EMAIL_HOST = "localhost"
+  EMAIL_PORT = "2500"
+  EMAIL_ADDRESS = "no-reply@localhost"
+  EMAIL_USERNAME = "no-login@localhost"
+  EMAIL_PASSWORD = "password"
+  JWT_LIFETIME_SECONDS = "900"
+  CORS_ALLOWED_ORIGINS = "*"
+  CONSUMET_URL = "https://localhost.com"
+  TOMCAT_AJP_ENABLED = "true"
+  TOMCAT_AJP_PORT = "8009"
+  TOMCAT_AJP_SECRET_REQUIRED = "false"
+  TOMCAT_AJP_SECRET = "6qyuET3rNuzYRBtrBQjh8zCe"
+  LOGGING_CONFIG = "./config/logback-spring.xml"
+  SPRING_PROFILES_INCLUDE = "development"
+  SPRING_REDIS_HOST = "100.72.31.107"
+  SPRING_REDIS_PORT = "6379"
+  SPRING_DATASOURCE_URL = "jdbc:mariadb://mariadb:3306/test"
+  SPRING_DATASOURCE_USERNAME = "username"
+  SPRING_DATASOURCE_PASSWORD = "password"
+  SHOW_SQL = "false"
+  ASYNC_CONFIG = "./config/async-config.yml"
+  SPRING_APPLICATION_NAME = "aniflix-development"
+  SPRING_APPLICATION_URL = "http://localhost:8080"
+  OTLP_METRICS_EXPORT_URL = "http://localhost:4317/v1/metrics"
+  OTLP_TRACING_ENDPOINT = "http://localhost:4317/v1/traces"
+  LOG_APPENDER = "HUMANREADABLE"
