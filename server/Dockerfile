@@ -36,14 +36,4 @@ EXPOSE 8080
 
 # Run application
 ENTRYPOINT ["/opt/app/slimjre/bin/java"]
-CMD [
-  "-Xms512m",
-  "-Xmx4096m",
-  "-Djava.security.egd=file:/dev/urandom",
-  "-Djava.awt.headless=true",
-  "-cp", "/opt/app:/opt/app/lib/*",
-  "org.jordijaspers.aniflix.Aniflix",
-  "--spring.config.additional-location=/opt/app/config/",
-  "--spring.output.ansi.enabled=always",
-  "--spring.profiles.include=development"
-]
+CMD ["-Xms512m", "-Xmx4096m", "-Djava.security.egd=file:/dev/urandom", "-Djava.awt.headless=true", "-cp", "/opt/app:/opt/app/lib/*", "org.jordijaspers.aniflix.Aniflix", "--spring.config.additional-location=/opt/app/config/", "--spring.output.ansi.enabled=always", "--spring.profiles.include=development"]
